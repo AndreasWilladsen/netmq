@@ -164,7 +164,7 @@ namespace NetMQ.Tests
             }
         }
 
-        [Fact(Skip = "Does not work on Linux"), Trait("Category", "Explicit")]
+       [Fact]
         public void TestKeepalive()
         {
             // there is no way to test tcp keep alive without disconnect the cable, we just testing that is not crashing the system

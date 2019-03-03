@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMQ-unix", "NetMQ\NetMQ-u
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMQ.Tests-unix", "NetMQ.Tests\NetMQ.Tests-unix.csproj", "{E95F0358-E822-47E5-9B11-541A44C2EF15}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMQ.Tests", "NetMQ.Tests\NetMQ.Tests.csproj", "{8CB1BEC8-D226-49A3-B950-618D7D17425E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,18 @@ Global
 		{E95F0358-E822-47E5-9B11-541A44C2EF15}.Release|x64.Build.0 = Release|x64
 		{E95F0358-E822-47E5-9B11-541A44C2EF15}.Release|x86.ActiveCfg = Release|x86
 		{E95F0358-E822-47E5-9B11-541A44C2EF15}.Release|x86.Build.0 = Release|x86
+		{8CB1BEC8-D226-49A3-B950-618D7D17425E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CB1BEC8-D226-49A3-B950-618D7D17425E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CB1BEC8-D226-49A3-B950-618D7D17425E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8CB1BEC8-D226-49A3-B950-618D7D17425E}.Debug|x64.Build.0 = Debug|Any CPU
+		{8CB1BEC8-D226-49A3-B950-618D7D17425E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8CB1BEC8-D226-49A3-B950-618D7D17425E}.Debug|x86.Build.0 = Debug|Any CPU
+		{8CB1BEC8-D226-49A3-B950-618D7D17425E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CB1BEC8-D226-49A3-B950-618D7D17425E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CB1BEC8-D226-49A3-B950-618D7D17425E}.Release|x64.ActiveCfg = Release|Any CPU
+		{8CB1BEC8-D226-49A3-B950-618D7D17425E}.Release|x64.Build.0 = Release|Any CPU
+		{8CB1BEC8-D226-49A3-B950-618D7D17425E}.Release|x86.ActiveCfg = Release|Any CPU
+		{8CB1BEC8-D226-49A3-B950-618D7D17425E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

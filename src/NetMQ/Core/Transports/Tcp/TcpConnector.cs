@@ -22,8 +22,11 @@
 using System;
 using System.Diagnostics;
 using System.Net.Sockets;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using AsyncIO;
 using JetBrains.Annotations;
+using NetMQ.Core.Utils;
 
 namespace NetMQ.Core.Transports.Tcp
 {
@@ -47,8 +50,7 @@ namespace NetMQ.Core.Transports.Tcp
         /// <summary>
         /// The underlying AsyncSocket.
         /// </summary>
-        [CanBeNull]
-        private AsyncSocket m_s;
+        [CanBeNull] private AsyncSocket m_s;
 
         /// <summary>
         /// If true file descriptor is registered with the poller and 'handle'
@@ -205,7 +207,8 @@ namespace NetMQ.Core.Transports.Tcp
             // TerminatingException can occur in above call to EventConnectDelayed via
             // MonitorEvent.Write if corresponding PairSocket has been sent Term command
             catch (TerminatingException)
-            {}
+            {
+            }
         }
 
         /// <summary>
@@ -245,9 +248,12 @@ namespace NetMQ.Core.Transports.Tcp
                 m_ioObject.RemoveSocket(m_s);
                 m_handleValid = false;
 
-                try {
+                try
+                {
                     m_s.NoDelay = true;
-                } catch (ArgumentException ex) {
+                }
+                catch (ArgumentException ex)
+                {
                     // OSX sometime fail while the socket is still connecting
                 }
 
@@ -259,16 +265,23 @@ namespace NetMQ.Core.Transports.Tcp
 
                     if (m_options.TcpKeepaliveIdle != -1 && m_options.TcpKeepaliveIntvl != -1)
                     {
-                        // Write the TCP keep-alive options to a byte-array, to feed to the IOControl method..
-                        var bytes = new ByteArraySegment(new byte[12]);
+//                        // Write the TCP keep-alive options to a byte-array, to feed to the IOControl method..
+//                        var bytes = new ByteArraySegment(new byte[12]);
+//
+//                        Endianness endian = BitConverter.IsLittleEndian ? Endianness.Little : Endianness.Big;
+//
+//                        bytes.PutInteger(endian, m_options.TcpKeepalive, 0);
+//                        bytes.PutInteger(endian, m_options.TcpKeepaliveIdle, 4);
+//                        bytes.PutInteger(endian, m_options.TcpKeepaliveIntvl, 8);
 
-                        Endianness endian = BitConverter.IsLittleEndian ? Endianness.Little : Endianness.Big;
+                        var s = (Socket) m_s.GetType().GetField("m_socket", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(m_s);
 
-                        bytes.PutInteger(endian, m_options.TcpKeepalive, 0);
-                        bytes.PutInteger(endian, m_options.TcpKeepaliveIdle, 4);
-                        bytes.PutInteger(endian, m_options.TcpKeepaliveIntvl, 8);
+                        TcpKeepAliveHelper.SetSocketOption(s, TcpKeepAliveHelper.keepAliveOptionNames[1], m_options.TcpKeepaliveIdle);
+                        TcpKeepAliveHelper.SetSocketOption(s, TcpKeepAliveHelper.keepAliveOptionNames[2], m_options.TcpKeepaliveIntvl);
 
-                        m_s.IOControl(IOControlCode.KeepAliveValues, (byte[])bytes, null);
+//                        m_s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, (byte[]) bytes);
+
+                        //m_s.IOControl(IOControlCode.KeepAliveValues, (byte[])bytes, null);
                     }
                 }
 
@@ -330,6 +343,7 @@ namespace NetMQ.Core.Transports.Tcp
                     m_currentReconnectIvl = m_options.ReconnectIvlMax;
                 }
             }
+
             return thisInterval;
         }
 

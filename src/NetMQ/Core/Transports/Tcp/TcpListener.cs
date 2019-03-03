@@ -22,11 +22,13 @@
 using System;
 using System.Diagnostics;
 using System.Net.Sockets;
+using System.Reflection;
 #if NETSTANDARD1_6
 using System.Runtime.InteropServices;
 #endif
 using AsyncIO;
 using JetBrains.Annotations;
+using NetMQ.Core.Utils;
 
 namespace NetMQ.Core.Transports.Tcp
 {
@@ -201,15 +203,20 @@ namespace NetMQ.Core.Transports.Tcp
 
                         if (m_options.TcpKeepaliveIdle != -1 && m_options.TcpKeepaliveIntvl != -1)
                         {
-                            var bytes = new ByteArraySegment(new byte[12]);
+//                            var bytes = new ByteArraySegment(new byte[12]);
+//
+//                            Endianness endian = BitConverter.IsLittleEndian ? Endianness.Little : Endianness.Big;
+//
+//                            bytes.PutInteger(endian, m_options.TcpKeepalive, 0);
+//                            bytes.PutInteger(endian, m_options.TcpKeepaliveIdle, 4);
+//                            bytes.PutInteger(endian, m_options.TcpKeepaliveIntvl, 8);
+//
+//                            acceptedSocket.IOControl(IOControlCode.KeepAliveValues, (byte[])bytes, null);
+                            
+                            var s = (Socket) acceptedSocket.GetType().GetField("m_socket", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(acceptedSocket);
 
-                            Endianness endian = BitConverter.IsLittleEndian ? Endianness.Little : Endianness.Big;
-
-                            bytes.PutInteger(endian, m_options.TcpKeepalive, 0);
-                            bytes.PutInteger(endian, m_options.TcpKeepaliveIdle, 4);
-                            bytes.PutInteger(endian, m_options.TcpKeepaliveIntvl, 8);
-
-                            acceptedSocket.IOControl(IOControlCode.KeepAliveValues, (byte[])bytes, null);
+                            TcpKeepAliveHelper.SetSocketOption(s, TcpKeepAliveHelper.keepAliveOptionNames[1], m_options.TcpKeepaliveIdle);
+                            TcpKeepAliveHelper.SetSocketOption(s, TcpKeepAliveHelper.keepAliveOptionNames[2], m_options.TcpKeepaliveIntvl);
                         }
                     }
 
